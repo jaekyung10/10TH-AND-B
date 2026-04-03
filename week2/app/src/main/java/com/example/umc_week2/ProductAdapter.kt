@@ -11,7 +11,7 @@ class ProductAdapter(
     private val onHeartClick: ((Int) -> Unit)? = null
 ) : RecyclerView.Adapter<ProductAdapter.ViewHolder>() {
 
-    inner class ViewHolder(val binding: ItemProductBinding) :
+    inner class ViewHolder(private val binding: ItemProductBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(product: ProductData, position: Int) {
@@ -46,12 +46,13 @@ class ProductAdapter(
                 } else {
                     binding.ivWish.setImageResource(R.drawable.ic_heart_outline)
                 }
+
+                binding.ivWish.setOnClickListener {
+                    onHeartClick?.invoke(position)
+                }
             } else {
                 binding.ivWish.visibility = View.GONE
-            }
-
-            binding.ivWish.setOnClickListener {
-                onHeartClick?.invoke(position)
+                binding.ivWish.setOnClickListener(null)
             }
         }
     }

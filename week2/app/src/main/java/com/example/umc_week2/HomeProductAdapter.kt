@@ -9,7 +9,7 @@ class HomeProductAdapter(
     private val productList: List<ProductData>
 ) : RecyclerView.Adapter<HomeProductAdapter.ViewHolder>() {
 
-    inner class ViewHolder(val binding: ItemHomeProductBinding) :
+    inner class ViewHolder(private val binding: ItemHomeProductBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(product: ProductData) {
