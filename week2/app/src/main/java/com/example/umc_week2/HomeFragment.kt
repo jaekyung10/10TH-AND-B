@@ -5,8 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.umc_week2.databinding.FragmentHomeBinding
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 
 class HomeFragment : Fragment() {
 
@@ -24,28 +27,44 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val homeProductList = listOf(
+        binding.rvHomeProducts.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+
+        val defaultHomeProducts = listOf(
             ProductData(
                 R.drawable.main_shoes1,
                 "Air Jordan XXXVI",
                 "",
                 "",
-                "US$185"
+                "US$185",
+                false,
+                false,
+                false
             ),
             ProductData(
                 R.drawable.main_shoes2,
                 "Nike Air Force 1 '07",
                 "",
                 "",
-                "US$115"
+                "US$115",
+                false,
+                false,
+                false
             )
         )
 
-        val adapter = HomeProductAdapter(homeProductList)
+        lifecycleScope.launch {
+            val savedHomeProducts = ProductDataStore.getHomeProducts(requireContext()).first()
 
-        binding.rvHomeProducts.adapter = adapter
-        binding.rvHomeProducts.layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            val homeList = if (savedHomeProducts.isEmpty()) {
+                ProductDataStore.saveHomeProducts(requireContext(), defaultHomeProducts)
+                defaultHomeProducts
+            } else {
+                savedHomeProducts
+            }
+
+            binding.rvHomeProducts.adapter = HomeProductAdapter(homeList)
+        }
     }
 
     override fun onDestroyView() {

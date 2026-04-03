@@ -7,14 +7,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.umc_week2.databinding.ItemProductBinding
 
 class ProductAdapter(
-    private val productList: List<ProductData>
+    private val productList: List<ProductData>,
+    private val onHeartClick: ((Int) -> Unit)? = null
 ) : RecyclerView.Adapter<ProductAdapter.ViewHolder>() {
 
     inner class ViewHolder(val binding: ItemProductBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(product: ProductData) {
-
+        fun bind(product: ProductData, position: Int) {
             binding.ivProduct.setImageResource(product.imageResId)
             binding.tvProductName.text = product.name
             binding.tvPrice.text = product.price
@@ -41,7 +41,6 @@ class ProductAdapter(
 
             if (product.showWishIcon) {
                 binding.ivWish.visibility = View.VISIBLE
-
                 if (product.isLiked) {
                     binding.ivWish.setImageResource(R.drawable.ic_heart_filled)
                 } else {
@@ -49,6 +48,10 @@ class ProductAdapter(
                 }
             } else {
                 binding.ivWish.visibility = View.GONE
+            }
+
+            binding.ivWish.setOnClickListener {
+                onHeartClick?.invoke(position)
             }
         }
     }
@@ -63,7 +66,7 @@ class ProductAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(productList[position])
+        holder.bind(productList[position], position)
     }
 
     override fun getItemCount(): Int = productList.size

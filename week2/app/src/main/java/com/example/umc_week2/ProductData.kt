@@ -7,6 +7,6 @@ data class ProductData(
     val subInfo: String,
     val price: String,
     val isBestSeller: Boolean = false,
-    val isLiked: Boolean = false,
+    var isLiked: Boolean = false,
     val showWishIcon: Boolean = true
 )

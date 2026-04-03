@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.GridLayoutManager
 import com.example.umc_week2.databinding.FragmentBuyBinding
 
 class BuyFragment : Fragment() {
@@ -24,48 +23,52 @@ class BuyFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val productList = listOf(
-            ProductData(
-                R.drawable.socks1,
-                "Nike Everyday Plus Cushioned",
-                "Training Ankle Socks (6 Pairs)",
-                "5 Colours",
-                "US$10",
-                false,
-                true
-            ),
-            ProductData(
-                R.drawable.socks2,
-                "Nike Elite Crew",
-                "Basketball Socks",
-                "7 Colours",
-                "US$16",
-                false,
-                false
-            ),
-            ProductData(
-                R.drawable.shoes1,
-                "Nike Air Force 1 '07",
-                "Women's Shoes",
-                "5 Colours",
-                "US$115",
-                true,
-                false
-            ),
-            ProductData(
-                R.drawable.shoes2,
-                "Jordan E Nike Air Force 1 '07ssentials",
-                "Men's Shoes",
-                "2 Colours",
-                "US$115",
-                true,
-                false
-            )
-        )
+        // 처음 진입 시 전체 탭 표시
+        if (savedInstanceState == null) {
+            showAllTab()
+        }
 
-        val adapter = ProductAdapter(productList)
-        binding.rvBuyProducts.adapter = adapter
-        binding.rvBuyProducts.layoutManager = GridLayoutManager(requireContext(), 2)
+        binding.tabAll.setOnClickListener {
+            showAllTab()
+        }
+
+        binding.tabTops.setOnClickListener {
+            showTopTab()
+        }
+
+        binding.tabSale.setOnClickListener {
+            showSaleTab()
+        }
+    }
+
+    private fun showAllTab() {
+        childFragmentManager.beginTransaction()
+            .replace(R.id.buyTabContainer, AllFragment())
+            .commit()
+
+        binding.tabAll.setTextColor(resources.getColor(android.R.color.black, null))
+        binding.tabTops.setTextColor(resources.getColor(android.R.color.darker_gray, null))
+        binding.tabSale.setTextColor(resources.getColor(android.R.color.darker_gray, null))
+    }
+
+    private fun showTopTab() {
+        childFragmentManager.beginTransaction()
+            .replace(R.id.buyTabContainer, TopFragment())
+            .commit()
+
+        binding.tabAll.setTextColor(resources.getColor(android.R.color.darker_gray, null))
+        binding.tabTops.setTextColor(resources.getColor(android.R.color.black, null))
+        binding.tabSale.setTextColor(resources.getColor(android.R.color.darker_gray, null))
+    }
+
+    private fun showSaleTab() {
+        childFragmentManager.beginTransaction()
+            .replace(R.id.buyTabContainer, SaleFragment())
+            .commit()
+
+        binding.tabAll.setTextColor(resources.getColor(android.R.color.darker_gray, null))
+        binding.tabTops.setTextColor(resources.getColor(android.R.color.darker_gray, null))
+        binding.tabSale.setTextColor(resources.getColor(android.R.color.black, null))
     }
 
     override fun onDestroyView() {
